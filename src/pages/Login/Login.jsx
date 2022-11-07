@@ -12,12 +12,17 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Icon from '@mui/material/Icon';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import InputLabel from '@mui/material/InputLabel';
 import { ApiConnectionServer } from '../../data/ApiConnectionServer';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Link as LinkRouter } from 'react-router-dom';
 import Link from '@mui/material/Link';
+import { Navigate } from "react-router-dom";
+import FormControl from '@mui/material/FormControl';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Stack from '@mui/material/Stack';
+
 
 export class Login extends Component{
     state = {
@@ -40,7 +45,7 @@ export class Login extends Component{
             username: this.state.nombreusuario,
             password: this.state.password
         }
-
+        this.setState({loading:true});
         const peticion = this.apiServer.postData(serverObject,'login');
         peticion.then((data) => {
             this.setState({loading:false});
@@ -51,6 +56,7 @@ export class Login extends Component{
                 case 200:
                     alert(responseJson.message);
                     localStorage.setItem("usuario",JSON.stringify(responseJson.data));
+                    window.location = '/dashboard';
                     break;
                 case 500:
                     alert(responseJson.message);
@@ -81,6 +87,9 @@ export class Login extends Component{
     render(){
         return(
             <>
+                <Card style={{ margin:'20px' }}>
+                    <h1 style={{ margin:'20px' }}>Tienda online - Gestión administración.</h1>
+                </Card>
                 <Container className="login" maxWidth="sm">
                 <Card sx={{ minWidth: 275 }}>
                 <h1 style={{ margin:'20px' }}>Login</h1>
@@ -101,53 +110,55 @@ export class Login extends Component{
                         onChange={this.handleChange('nombreusuario')}
                         defaultValue=""
                     />
-                    <TextField
-                        fullWidth
-                        error={this.state.password.length > 10 ? '' : 'error'}
-                        label="Contraseña"
-                        onChange={this.handleChange('password')}
-                        type={this.state.flagPassword ? 'text' : 'password'}
-                    />
-                    {
-                        this.state.flagPassword && <box-icon  onClick={() =>{
-                            this.showPassword()
-                       }} name='low-vision'></box-icon>
-                    }
-                    {
-                        !this.state.flagPassword && <box-icon  onClick={() =>{
-                            this.showPassword()
-                       }} name='show'></box-icon>
-                    }
+                    <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
+                            <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
+                            <OutlinedInput
+                                id="outlined-adornment-password"
+                                onChange={this.handleChange('password')}
+                                type={this.state.flagPassword ? 'text' : 'password'}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            edge="end"
+                                            onClick={() =>{
+                                                this.showPassword()
+                                           }}
+                                        >
+                                        {this.state.flagPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                label="Contraseña"
+                            />
+                    </FormControl>
                 </div>
                 </Box>
                 </CardContent>
                 <CardActions>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="center"
-                        alignItems="center">
-                        {    !this.state.loading &&
-                            <Button onClick={() => {
-                                this.doLogin()
-                            }} variant="contained">
-                                Log-In
-                            </Button>
-                        }
-                        {    this.state.loading &&
-                             <CircularProgress />
-                        }
-                        <Link
-                            component="button"
-                            variant="body2">
-                            
-                            <LinkRouter to="/registro">
-                            ¿No tienes cuenta?
-                            </LinkRouter>
-                        </Link>
+                <Container maxWidth="sm">
+                <Box sx={{ width: '100%' }}>
+                        <Stack justifyContent="center" spacing={3}>
+                            {   !this.state.loading &&
+                                <Button justifyContent="center" onClick={() => {
+                                    this.doLogin()
+                                }} variant="contained">
+                                    Log-In
+                                </Button>
+                            }
+                            {    this.state.loading &&<CircularProgress  justifyContent="center" /> }
                         
-                    </Grid>
-                    
+                            <Link
+                                component="button"
+                                variant="body2">
+                                
+                                <LinkRouter to="/registro">
+                                ¿No tienes cuenta?
+                                </LinkRouter>
+                            </Link>
+                        </Stack>
+                    </Box>
+                </Container>
                 </CardActions>
                 </Card>
                 </Container>

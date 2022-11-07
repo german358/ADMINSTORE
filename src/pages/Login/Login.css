@@ -1,6 +1,10 @@
-
+/*
 body{
     background-color: #ededed;
+}
+*/
+body{
+    background-image: url("../../assets/images/imagebackground.jpg");
 }
 
 .login{
