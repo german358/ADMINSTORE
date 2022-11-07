@@ -25,12 +25,17 @@ import Stack from '@mui/material/Stack';
 
 
 export class Login extends Component{
+
+
     state = {
         nombreusuario:'',
         password: '',
         flagPassword: false,
-        loading: false
+        loading: false,
+        validform : false
     }
+
+   
 
     constructor(props){
         super(props);     
@@ -75,9 +80,6 @@ export class Login extends Component{
         this.setState({flagPassword : !actual})
     }
 
-    handleClickShowPassword(){
-        this.setState({showPassword: !this.state.showPassword})
-    }
 
     handleChange = (prop) => (event) => {
         this.setState({ ...this.state, [prop]: event.target.value });
@@ -125,7 +127,7 @@ export class Login extends Component{
                                                 this.showPassword()
                                            }}
                                         >
-                                        {this.state.flagPassword ? <VisibilityOff /> : <Visibility />}
+                                        {!this.state.flagPassword ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
                                     </InputAdornment>
                                 }
@@ -137,26 +139,26 @@ export class Login extends Component{
                 </CardContent>
                 <CardActions>
                 <Container maxWidth="sm">
-                <Box sx={{ width: '100%' }}>
-                        <Stack justifyContent="center" spacing={3}>
-                            {   !this.state.loading &&
-                                <Button justifyContent="center" onClick={() => {
-                                    this.doLogin()
-                                }} variant="contained">
-                                    Log-In
-                                </Button>
-                            }
-                            {    this.state.loading &&<CircularProgress  justifyContent="center" /> }
-                        
-                            <Link
-                                component="button"
-                                variant="body2">
-                                
-                                <LinkRouter to="/registro">
-                                ¿No tienes cuenta?
-                                </LinkRouter>
-                            </Link>
-                        </Stack>
+                    <Box sx={{ width: '100%' }}>
+                            <Stack spacing={2}>
+                                {   !this.state.loading &&
+                                    <Button fullWidth onClick={() => {
+                                        this.doLogin()
+                                    }} variant="contained">
+                                        Log-In
+                                    </Button>
+                                }
+                                {    this.state.loading &&<CircularProgress justifyContent="center" /> }
+                            
+                                <Link
+                                    component="button"
+                                    variant="body2">
+                                    
+                                    <LinkRouter to="/registro">
+                                    ¿No tienes cuenta?
+                                    </LinkRouter>
+                                </Link>
+                            </Stack>
                     </Box>
                 </Container>
                 </CardActions>

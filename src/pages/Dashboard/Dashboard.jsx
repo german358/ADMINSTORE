@@ -1,43 +1,199 @@
-import { Component } from "react";
-import { Navigate } from "react-router-dom";
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import AdbIcon from '@mui/icons-material/Adb';
+import { Link, Navigate, Outlet } from 'react-router-dom';
 
+const pages = ['Categoria', 'Producto', 'Compras'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-export class Dashboard extends Component{
+function DashBoard() {
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  var userinfo;
 
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
 
-    constructor(props){
-        super(props)
-        this.state = {
-            isLogin: false,
-            userdata : null
-        };
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const logOut = () =>{
+    localStorage.setItem("usuario",null);
+    window.location = '/';
+  }
+
+  const validateSession = () =>{
+    const userdata = JSON.parse(localStorage.getItem("usuario"));
+   
+    if(userdata != null && userdata.token != null && userdata.token != ""){
+        userinfo = userdata;
+        return true;
     }
+    return false;
+  }
 
+  if(!validateSession()) {
+    return(
+        <>
+            <Navigate to="/"></Navigate>
+        </>
+    )
+  }
 
-    static getDerivedStateFromProps(props,state) {
-       const data = localStorage.getItem("usuario");
-       
-       if(data != null){
-            return {
-                isLogin: true,
-                userdata: JSON.parse(data)
-            };
-       }
-    }
+  return (
+    <>
+    <AppBar position="static">
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            Administración
+          </Typography>
 
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+              }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <Link to='/dashboard/categoria'>
+                     <Typography textAlign="center">{page}</Typography>
+                  </Link>
+                  
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href=""
+            sx={{
+              mr: 2,
+              display: { xs: 'flex', md: 'none' },
+              flexGrow: 1,
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            LOGO
+          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Button
+                key={page}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                <Link style={{ color:'white' }} to={`/dashboard/${page}`}>
+                     <Typography textAlign="center">{page}</Typography>
+                </Link>
+         
+              </Button>
+            ))}
+          </Box>
 
-    render(){
-        if(!this.state.isLogin){
-            return(
-                <>
-                    <Navigate to="/" replace={true} ></Navigate>
-                </>
-            )
-        }
-        return(
-            <>
-                <h1>Bienvenidos {this.state.userdata.nombres}</h1>
-            </>
-        )        
-    }
+          <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+               {userinfo.nombres} {userinfo.apellidos}
+            </Button>
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={logOut}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
+    <Outlet></Outlet>
+    </>
+
+  );
 }
+export default DashBoard;
