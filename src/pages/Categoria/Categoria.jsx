@@ -3,31 +3,44 @@ import DashBoard from "../Dashboard/Dashboard"
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import { CategoriaForm } from "../../components/CategoriaForm/CategoriaForm";
+import { CategoriaTable } from "../../components/CategoriaTable/CategoriaTable";
+import { Component } from "react";
 
 
-export const Categoria = () =>{
-    return(
-        <>
-            <Container maxWidth="xl">
-                <h1 style={{ color:'black' }}>Categorias</h1>
 
-                <Grid container spacing={2}>
-                    <Grid item xs={8}>
-                        <h3 style={{ color:'black' }}>Nueva categoria</h3>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <h3 style={{ color:'black' }}>Categorias registradas</h3>
-                    </Grid>
-                    <Grid item xs={4}>
-                        c
-                    </Grid>
-                    <Grid item xs={8}>
-                        d
-                    </Grid>
-                </Grid>
-            </Container>
-            
-        </>
-    )
+export class Categoria extends Component{
 
+    constructor(props){
+        super(props);
+    }
+    
+    render(){
+        return(
+            <>
+                <Container maxWidth="xl">
+                    <h1 style={{ color:'black' }}>Categorias</h1>
+    
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <h3 style={{ color:'black' }}>Nueva categoria</h3>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <h3 style={{ color:'black' }}>Categorias registradas</h3>
+                        </Grid>
+                    </Grid>
+    
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <CategoriaForm></CategoriaForm>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <CategoriaTable></CategoriaTable>
+                        </Grid>
+                    </Grid>
+                </Container>
+                
+            </>
+        )
+    }
 }
