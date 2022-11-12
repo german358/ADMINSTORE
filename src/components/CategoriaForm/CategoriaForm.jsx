@@ -37,7 +37,7 @@ export const CategoriaForm = () =>{
             reject(error);
           }
         })
-      }
+    }
 
 
     const  createCategoria = async () => {
@@ -45,7 +45,9 @@ export const CategoriaForm = () =>{
        
         setIsLoading(true);
         const userdata = JSON.parse(localStorage.getItem("usuario"));
+
         const base64 = await convertBase64(file)
+   
         const serverObject = {
             nombre:formdata.nombre,
             descripcion:formdata.descripcion,
@@ -85,52 +87,52 @@ export const CategoriaForm = () =>{
     return(
 
         <Card>
-      <CardContent>
-      <Box
-        component="form"
-        sx={{
-            '& .MuiTextField-root': { m: 1, },
-        }}
-        noValidate
-        autoComplete="off">
-      <div>
-        <TextField
-          fullWidth
-          id="outlined-multiline-flexible"
-          label="Nombre categoria"
-          onChange={handleChange('nombre')}/>
-      </div>
-      <div>
-      <TextField
-          id="outlined-multiline-static"
-          label="Descripción categoria"
-          onChange={handleChange('descripcion')}
-          multiline
-          rows={4}
-          fullWidth
-          defaultValue=""/>
-      </div>
-      <div>
-        <Typography variant="h6" component="h6">
-                Seleccione una imagen
-        </Typography>
-        <TextField
-            type="file"
-            onChange={addFile}
-            fullWidth/>
-      </div>
-    </Box>
-      </CardContent>
-      <CardActions>
-        {
-           !isLoading && <Button onClick={() =>{
-                createCategoria()
-            }} size="small">Crear</Button>
-        }
-        {
-           isLoading &&  <CircularProgress />
-        }
-        <Button size="small">Limpiar</Button>
+          <CardContent>
+          <Box
+            component="form"
+            sx={{
+                '& .MuiTextField-root': { m: 1, },
+            }}
+            noValidate
+            autoComplete="off">
+          <div>
+            <TextField
+              fullWidth
+              id="outlined-multiline-flexible"
+              label="Nombre categoria"
+              onChange={handleChange('nombre')}/>
+          </div>
+          <div>
+          <TextField
+              id="outlined-multiline-static"
+              label="Descripción categoria"
+              onChange={handleChange('descripcion')}
+              multiline
+              rows={4}
+              fullWidth
+              defaultValue=""/>
+          </div>
+          <div>
+            <Typography variant="h6" component="h6">
+                    Seleccione una imagen
+            </Typography>
+            <TextField
+                type="file"
+                onChange={addFile}
+                fullWidth/>
+          </div>
+        </Box>
+          </CardContent>
+          <CardActions>
+            {
+              !isLoading && <Button onClick={() =>{
+                    createCategoria()
+                }} size="small">Crear</Button>
+            }
+            {
+              isLoading &&  <CircularProgress />
+            }
+            <Button size="small">Limpiar</Button>
       </CardActions>
     </Card>
 

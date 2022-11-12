@@ -11,11 +11,14 @@ import { Component } from "react";
 
 export class Categoria extends Component{
 
+    //1.
     constructor(props){
         super(props);
     }
+
     
-    render(){
+    //3.
+    render(){           
         return(
             <>
                 <Container maxWidth="xl">

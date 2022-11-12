@@ -43,4 +43,17 @@ export class ApiConnectionServer{
         return peticion;
     }
 
+
+    getDataToken(endpoint,token){
+        var peticion = fetch(this.urlServer + endpoint,
+        {
+            method:'GET',
+            headers:{
+                'x-access-token': token, 
+                'Accept':'application/json, text/plain, */*',
+                'Content-Type':'application/json'
+            }
+        })
+        return peticion;
+    }
 }

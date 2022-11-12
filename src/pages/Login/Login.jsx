@@ -59,8 +59,8 @@ export class Login extends Component{
             this.setState({loading:false});
             switch(responseJson.code){
                 case 200:
-                    alert(responseJson.message);
                     localStorage.setItem("usuario",JSON.stringify(responseJson.data));
+                    //Redireccionar al usuario
                     window.location = '/dashboard';
                     break;
                 case 500:
