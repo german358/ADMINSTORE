@@ -4,7 +4,7 @@ export class ApiConnectionServer{
     postData(bodyData,endpoint){
         var requestData = JSON.stringify(bodyData);
 
-        var peticion = fetch("http://localhost:9000/api/" + endpoint,
+        var peticion = fetch("http://localhost:4000/api/" + endpoint,
         {
             method:'POST',
             headers:{
@@ -19,7 +19,7 @@ export class ApiConnectionServer{
 
 
     getData(endpoint){
-        var peticion = fetch("http://localhost:9000/api/" + endpoint);
+        var peticion = fetch("http://localhost:4000/api/" + endpoint);
         return peticion;
     }
 
