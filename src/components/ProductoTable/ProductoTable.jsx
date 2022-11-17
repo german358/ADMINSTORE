@@ -9,19 +9,34 @@ import { Component } from 'react';
 import { ApiConnectionServer } from '../../data/ApiConnectionServer';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import OpcionTabla from '../OpcionTabla/OpcionTabla';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import { DataGrid } from '@mui/x-data-grid';
+import TablePagination from '@mui/material/TablePagination';
 
-export class CategoriaTable extends Component{
+export class ProductoTable extends Component{
+
 
     constructor(props){
-        super(props); 
+        super(props);
     }
 
-    reLoadTabla(){
-        console.log("Cargando categorias de nuevo");
-        this.getCategorias();
+    eliminarProducto(id){
+        const callApi = new ApiConnectionServer();
+        const userdata = JSON.parse(localStorage.getItem("usuario"));
+        const serverResponse = callApi.getDataToken('producto/delete/' + id,userdata.token);
+          serverResponse.then((data) => {
+              return data.json();
+          }).then((jsonresponse) =>{
+              if(jsonresponse.code == 200){
+                  this.props.reloadtable();
+              }
+              else{
+                  alert(jsonresponse.message);
+              }
+          }).catch((error) =>{
+              alert("Error hijo " + error);
+          })
     }
 
     render(){
@@ -31,6 +46,7 @@ export class CategoriaTable extends Component{
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                         <TableRow>
+                            <TableCell>Categoria</TableCell>
                             <TableCell>Nombre</TableCell>
                             <TableCell align="left">Descripción<nav></nav></TableCell>
                             <TableCell align="left">Imagen</TableCell>
@@ -38,11 +54,14 @@ export class CategoriaTable extends Component{
                         </TableRow>
                         </TableHead>
                         <TableBody>
-                            {this.props.categorias.map((row,index) => (
+                            {this.props.productos.map((row,index) => (
                                 
                                 <TableRow key={index}
                                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
+                                    <TableCell component="th" scope="row">
+                                        {row.categoriaid.nombre}
+                                    </TableCell>
                                     <TableCell component="th" scope="row">
                                         {row.nombre}
                                     </TableCell>
@@ -52,6 +71,9 @@ export class CategoriaTable extends Component{
                                     </TableCell>
                                     <TableCell>
                                         <Stack spacing={2} direction="row">
+                                            <Button size="small" variant="contained" color="error" onClick={() => {
+                                                this.eliminarProducto(row._id);
+                                            }}>Eliminar</Button>
                                             <Button size="small"  color="success" variant="outlined">Editar</Button>
                                         </Stack>
                                     </TableCell>

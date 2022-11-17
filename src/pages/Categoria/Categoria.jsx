@@ -6,16 +6,48 @@ import Grid from '@mui/material/Grid';
 import { CategoriaForm } from "../../components/CategoriaForm/CategoriaForm";
 import { CategoriaTable } from "../../components/CategoriaTable/CategoriaTable";
 import { Component } from "react";
+import { ApiConnectionServer } from "../../data/ApiConnectionServer";
 
 
 
 export class Categoria extends Component{
 
+    state = {
+        categorias:[],
+        isLoading: false
+    };
+
     //1.
     constructor(props){
         super(props);
+        this.reLoadTable.bind(this);
     }
 
+    getCategorias(){
+        let callApi = new ApiConnectionServer()
+        const userdata = JSON.parse(localStorage.getItem("usuario"));
+        const serverResponse = callApi.getDataToken('/categoria/getall',userdata.token);
+        serverResponse.then((data) => {
+            return data.json();
+        }).then((jsonresponse) =>{
+            if(jsonresponse.code == 200){
+                this.setState({categorias : jsonresponse.data})
+            }
+            else{
+                alert(jsonresponse.message);
+            }
+        }).catch((error) =>{
+            alert("Error " + error);
+        })
+    }
+
+    componentDidMount(){
+        this.getCategorias();
+    }
+
+    reLoadTable(){
+        this.getCategorias();
+    }
     
     //3.
     render(){           
@@ -35,10 +67,10 @@ export class Categoria extends Component{
     
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <CategoriaForm></CategoriaForm>
+                            <CategoriaForm reloadtable={this.reLoadTable.bind(this)}></CategoriaForm>
                         </Grid>
                         <Grid item xs={6}>
-                            <CategoriaTable></CategoriaTable>
+                            <CategoriaTable categorias={this.state.categorias}></CategoriaTable>
                         </Grid>
                     </Grid>
                 </Container>

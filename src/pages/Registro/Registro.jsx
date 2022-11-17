@@ -7,7 +7,6 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -19,6 +18,7 @@ import { Link as LinkRouter } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import { ApiConnectionServer } from "../../data/ApiConnectionServer";
 import CircularProgress from '@mui/material/CircularProgress';
+import AlertDialog from '../../components/Dialog/AlertDialog';
 
 export class Registro extends Component{
 
@@ -26,19 +26,24 @@ export class Registro extends Component{
         flagPassword: false,
         flagValidatePassowrd:false,
         loading: false,
-        validform : false,
+        validform : true,
         nombres:'',
         apellidos:'',
         correo:'',
         password:'',
-        validapassword:''
+        validapassword:'',
+        modalmessage:''
     }
     apiServer = new ApiConnectionServer()
 
     constructor(props){
-        super(props)
+        super(props);
+        this.showPassword = this.showPassword.bind(this)
     }
 
+    changeState(){
+        this.setState({validform:true})
+    }
     //Valida si debe o no mostrar la contraseña escrita.
     showPassword(item){
         if(item === 'password'){
@@ -66,6 +71,17 @@ export class Registro extends Component{
             correo: this.state.correo,
             password: this.state.password
         }
+
+        if(serverObject.nombres === "" || serverObject.apellidos === "" || serverObject.correo === "" || serverObject.password === ""){
+            this.setState({validform:false,modalmessage:"Por favor complete toda la información para realizar el registro"});
+            return;
+        }
+
+        if(serverObject.password !== this.state.validapassword){
+            this.setState({validform:false,modalmessage:"Las contraseñas no coinciden."});
+            return;
+        }
+
         this.setState({loading:true});
         const peticion = this.apiServer.postData(serverObject,'user/create');
         peticion.then((data) => {
@@ -93,6 +109,10 @@ export class Registro extends Component{
     render(){
         return(
             <>
+                {
+                    !this.state.validform &&
+                    <AlertDialog message={this.state.modalmessage} reload={this.changeState.bind(this)} open={!this.state.validform}></AlertDialog>
+                }
                 <Card style={{ margin:'20px' }}>
                     <h1 style={{ margin:'20px' }}>Tienda online - Gestión administración.</h1>
                 </Card>
@@ -127,7 +147,6 @@ export class Registro extends Component{
                     <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
                             <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
                             <OutlinedInput
-                                id="outlined-adornment-password"
                                 onChange={this.handleChange('password')}
                                 type={this.state.flagPassword ? 'text' : 'password'}
                                 endAdornment={
@@ -149,7 +168,6 @@ export class Registro extends Component{
                     <FormControl sx={{ m: 1, width: '100%' }} variant="outlined">
                             <InputLabel htmlFor="outlined-adornment-password">Valida contraseña</InputLabel>
                             <OutlinedInput
-                                id="outlined-adornment-password"
                                 onChange={this.handleChange('validapassword')}
                                 type={this.state.flagValidatePassowrd ? 'text' : 'password'}
                                 endAdornment={
@@ -172,8 +190,7 @@ export class Registro extends Component{
                 </Box>
                 </CardContent>
                 <CardActions>
-                    <Grid
-   
+                    <Grid  
                         container
                         direction="column"
                         justifyContent="center"

@@ -8,23 +8,54 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
+import { ApiConnectionServer } from '../../data/ApiConnectionServer';
+
 
 const options = ['Editar', 'Eliminar'];
 
-export default function OpcionTabla() {
+export default function OpcionTabla(props) {
+
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [isLoading,setLoading] =  React.useState(false);
 
   const handleClick = () => {
     
     console.info(`You clicked ${options[selectedIndex]}`);
+    if(options[selectedIndex] == "Eliminar"){
+       eliminarCategoria();
+    }
   };
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
     setOpen(false);
   };
+
+  const eliminarCategoria = () => {
+      const callApi = new ApiConnectionServer();
+      const userdata = JSON.parse(localStorage.getItem("usuario"));
+     
+      setLoading(true);
+      const serverResponse = callApi.getDataToken('categoria/delete/' + props.categoria._id,userdata.token);
+        serverResponse.then((data) => {
+            setLoading(false);
+            return data.json();
+        }).then((jsonresponse) =>{
+            setLoading(false);
+            console.log(jsonresponse);
+            if(jsonresponse.code == 200){
+                props.onReloadTable();
+            }
+            else{
+                alert(jsonresponse.message);
+            }
+        }).catch((error) =>{
+            setLoading(false);
+            alert("Error hijo " + error);
+        })
+  }
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
