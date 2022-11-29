@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom"
 import { Categoria } from "./pages/Categoria/Categoria"
+import { Compras } from "./pages/Compras/Compras"
 import  Dashboard  from "./pages/Dashboard/Dashboard"
 import { Login } from "./pages/Login/Login"
 import { Producto } from "./pages/Producto/Producto"
@@ -16,6 +17,7 @@ export const RuteosApp = () =>{
             <Route path="/dashboard" element={<Dashboard></Dashboard>}>            
                     <Route path="/dashboard/categoria" element={<Categoria></Categoria>}></Route>
                     <Route path="/dashboard/producto" element={<Producto></Producto>}></Route>
+                    <Route path="/dashboard/compras" element={<Compras></Compras>}></Route>
             </Route>
         </Routes>
     )

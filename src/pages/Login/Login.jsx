@@ -22,6 +22,7 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Stack from '@mui/material/Stack';
+import AlertDialog from '../../components/Dialog/AlertDialog';
 
 
 export class Login extends Component{
@@ -32,24 +33,31 @@ export class Login extends Component{
         password: '',
         flagPassword: false,
         loading: false,
-        validform : false
+        validform : true
     }
 
    
 
     constructor(props){
         super(props);     
+        this.showPassword = this.showPassword.bind(this)
     }
 
     apiServer = new ApiConnectionServer()
 
     //Realiza la peticion al servidor
-    doLogin(){
-      
+    doLogin(){  
+
         var serverObject ={
             username: this.state.nombreusuario,
             password: this.state.password
         }
+
+        if(serverObject.username == "" || serverObject.password == ""){
+            this.setState({validform:false})
+            return;
+        }
+
         this.setState({loading:true});
         const peticion = this.apiServer.postData(serverObject,'login');
         peticion.then((data) => {
@@ -80,6 +88,10 @@ export class Login extends Component{
         this.setState({flagPassword : !actual})
     }
 
+    changeState(){
+        this.setState({validform:true})
+    }
+
 
     handleChange = (prop) => (event) => {
         this.setState({ ...this.state, [prop]: event.target.value });
@@ -89,6 +101,10 @@ export class Login extends Component{
     render(){
         return(
             <>
+                {
+                    !this.state.validform &&
+                    <AlertDialog message="por favor coloque la información" reload={this.changeState.bind(this)} open={!this.state.validform}></AlertDialog>
+                }
                 <Card style={{ margin:'20px' }}>
                     <h1 style={{ margin:'20px' }}>Tienda online - Gestión administración.</h1>
                 </Card>

@@ -1,8 +1,14 @@
 
 export class ApiConnectionServer{
 
+
     //urlServer = "https://apishopdocker.azurewebsites.net/api/";
-    urlServer = "http://localhost:4000/api/";
+    //urlServer = "http://localhost:80/api/";
+
+  
+   
+    urlServer = "https://apishopv12.herokuapp.com/api/";
+
 
     postData(bodyData,endpoint){
         var requestData = JSON.stringify(bodyData);
@@ -20,6 +26,7 @@ export class ApiConnectionServer{
         return peticion;
     }
 
+    
     postDataAuth(bodyData,endpoint,token){
         var requestData = JSON.stringify(bodyData);
         console.log(token);
@@ -56,4 +63,19 @@ export class ApiConnectionServer{
         })
         return peticion;
     }
+
+
+    sendServerData(endpoint,token,metodo){
+        var peticion = fetch(this.urlServer + endpoint,
+        {
+            method:metodo,
+            headers:{
+                'x-access-token': token, 
+                'Accept':'application/json, text/plain, */*',
+                'Content-Type':'application/json'
+            }
+        })
+        return peticion;
+    }
+
 }
