@@ -47,6 +47,7 @@ export const CategoriaForm = () =>{
         const userdata = JSON.parse(localStorage.getItem("usuario"));
 
         const base64 = await convertBase64(file)
+        
    
         const serverObject = {
             nombre:formdata.nombre,

@@ -45,7 +45,7 @@ function DashBoard() {
   const validateSession = () =>{
     const userdata = JSON.parse(localStorage.getItem("usuario"));
    
-    if(userdata != null && userdata.token != null && userdata.token != ""){
+    if(userdata !== null && userdata.token !== null && userdata.token !== ""){
         userinfo = userdata;
         return true;
     }

@@ -31,6 +31,7 @@ export class CategoriaTable extends Component{
         const serverResponse = this.callApi.getDataToken('/categoria/getall',userdata.token);
         serverResponse.then((data) => {
             this.setState({isLoading:false})
+            console.log(data);
             return data.json();
         }).then((jsonresponse) =>{
             this.setState({isLoading:false})
